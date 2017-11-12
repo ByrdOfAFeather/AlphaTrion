@@ -16,11 +16,11 @@ $(function(){
 function handlerfornavbar(){
 	var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 	if (w <= 1083){	
-		if (document.getElementsByClassName("navbar")[0].style.display == "block"){
+		if (document.getElementsByClassName("navbar")[0].style.display == "inline-block"){
 			document.getElementsByClassName("navbar")[0].style.display = "none";
 		}
 		else{
-			document.getElementsByClassName("navbar")[0].style.display = "block";
+			document.getElementsByClassName("navbar")[0].style.display = "inline-block";
 		}
 	}
 }
@@ -31,7 +31,7 @@ function resizehandler(){
 		document.getElementsByClassName("navbar")[0].style.display = "none";
 	}
 	else{
-		document.getElementsByClassName("navbar")[0].style.display = "block";
+		document.getElementsByClassName("navbar")[0].style.display = "flex";
 	}
 
 }

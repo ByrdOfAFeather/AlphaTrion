@@ -50,7 +50,6 @@ class CommunityInst(models.Model):
 	minutes_ended_early = models.PositiveIntegerField(default=5)
 	photo = S3DirectField(dest='community')
 
-
 	def __str__(self):
 		return"{}".format(self.date)
    

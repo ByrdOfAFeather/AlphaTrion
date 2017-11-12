@@ -40,7 +40,6 @@
 
 {% block nav-bar-extras %}
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
-
 {% load static %}
 <link rel='stylesheet' type='text/css' href="{% static 'css/navbar.css' %}">
 <script type="text/javascript" src="{% static 'js/navbar.js' %}"></script>
@@ -52,7 +51,6 @@
 {% endblock %}
 
 
-
 {% block style %}
 {% endblock %}
 
@@ -60,44 +58,41 @@
 <body>
 {% block nav-bar %}
 <header class="oheader">
-<nav >
-<a href="{% url 'home' %}" id='Title'>Student Senate</b>
+<nav>
+<a href="{% url 'home' %}" id='Title'>Student Senate</a>
 <a onclick='handlerfornavbar()' href="#" class='menu-icon'></a>
-	<ul class='navbar' id='navbar'>
+	<div class='navbar' id='navbar'>
 		{% load extras %}
 
-		<li class='nav-item'><a class = 'link' href='{% url 'home' %}'>Home</a></li>
+		<a class = 'link' href='{% url 'home' %}'><div class='nav-item'>Home</div></a>
 		
 		{% if request.user|has_group:"Senators" %}
 		<li class='nav-item' id='Senator-Main-List'>
 			<p style='margin:0px;' id='Senator-Link' class='link' aria-haspopup="true">Community</a>
-			<ul id='Senator-Sub-List'>
-				<li><a class='link' href='{% url "community-home" %}'>Community Surveys</a></li>
-				<li><a class='link' href='{% url "community-results" %}'>Survey Results</a></li>
+			<ul id='Community-Sub-List'>
+				<a class='link' href='{% url "community-home" %}'><li class='nav-item'>Community Surveys</li></a>
+				<a class='link' href='{% url "community-results" %}'><li class='nav-item'>Survey Results</li></a>
 			</ul>
 		</li>
 
 		{% else %}
-		<li class='nav-item'><a class = 'link' href='{% url 'community-home' %}'>Community</a></li>
-		{% endif %}
+		<a class = 'link' href='{% url 'community-home' %}'><div class='nav-item'>Community</div></a>{% endif %}
 			
-		<li class='nav-item'><a class = 'link' href='{% url 'projects-home' %}'>Projects</a></li>
+		<a class = 'link' href='{% url 'projects-home' %}'><div class='nav-item'>Projects</div></a>
 
 		<li class='nav-item' id='Senator-Main-List'>
-			<p style='margin:0px;' id='Senator-Link' class='link' aria-haspopup="true">Senate</a>
+			<div class='nav-item'><p id='Senator-Link' class='link' aria-haspopup="true">Senate</p></div>
 			<ul id='Senator-Sub-List'>
-				<li><a class='link' href='{% url "senate-home" %}'>Senators</a></li>
-				<li><a class='link' href='{% url "senate-minutes-home" %}'>Minutes</a></li>
+				<a class='link' href='{% url "senate-home" %}'><li class='nav-item'>Senators</li></a>
+				<a class='link' href='{% url "senate-minutes-home" %}'><li class='nav-item'>Minutes</li></a>
 			</ul>
 		</li>
-
 		{% if request.user.is_authenticated %}
-		<li style=''class='nav-item'><a class = 'link' href="{% url 'logout' %}">Logout</a></li>
+		<a class = 'link' href="{% url 'logout' %}"><div style=''class='nav-item'>Logout</div></a>
 		{% else %}
-		<li style=''class='nav-item'><a class = 'link' href="{% url 'login' %}">Login</a></li>
+		<a class = 'link' href="{% url 'login' %}"><div style=''class='nav-item'>Login</div></a>
 		{% endif %}
-
-	</ul>
+	</div>
 </nav>
 </header>
 
