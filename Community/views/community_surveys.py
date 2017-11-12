@@ -86,19 +86,19 @@ def review_community_instance(request, communityid):
 						game_comments=game_comments
 					)
 					
-					if extra_section.is_valid():
-						overall_rating = extra_section.cleaned_data['overall_rating']
-						extra_comments = extra_section.cleaned_data['extra_comments']
-						how_can_we_improve_survey = extra_section.cleaned_data['how_can_we_improve_survey']
-						pacing_rating = extra_section.cleaned_data['pacing_rating']
-						CommunityExtraRatings.objects.create(
-						user=user, 
-						community=community, 
-						overall_rating=overall_rating, 
-						extra_comments=extra_comments, 
-						how_can_we_improve_survey=how_can_we_improve_survey,
-						pacing_rating=pacing_rating,
-						)	
+			if extra_section.is_valid():
+				overall_rating = extra_section.cleaned_data['overall_rating']
+				extra_comments = extra_section.cleaned_data['extra_comments']
+				how_can_we_improve_survey = extra_section.cleaned_data['how_can_we_improve_survey']
+				pacing_rating = extra_section.cleaned_data['pacing_rating']
+				CommunityExtraRatings.objects.create(
+					user=user, 
+					community=community, 
+					overall_rating=overall_rating, 
+					extra_comments=extra_comments, 
+					how_can_we_improve_survey=how_can_we_improve_survey,
+					pacing_rating=pacing_rating,
+				)	
 
 
 

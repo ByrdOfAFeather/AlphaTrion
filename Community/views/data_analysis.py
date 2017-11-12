@@ -1,96 +1,20 @@
 from Community.forms import CommunityGameRatingsForm, CommunityExtraRatingsForm
 from Community.models import CommunityInst, CommunityGameRatings, CommunityGames, CommunityExtraRatings, Game
+from Community.extras.math_models import host_score, game_likeability
+from Community.extras.custom_graphs import build_surface, bar_graph
+from UserProfile.models import Student
 from bokeh.core.properties import Instance, String 
 from bokeh.embed import components
-from bokeh.io import show
-from bokeh.models import ColumnDataSource, LayoutDOM
+from bokeh.models import ColumnDataSource, LayoutDOM, Range1d
 from bokeh.plotting import figure, output_file, show
 from django.contrib.auth.decorators import permission_required, login_required, user_passes_test
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-from Community.extras.math_models import host_score, game_likeability
 from django.core.mail import send_mail
 
-JS_CODE = """ 
-	# Taken from https://bokeh.pydata.org/en/latest/docs/user_guide/extensions_gallery/wrapping.html
-
-	import * as p from "core/properties"
-	import {LayoutDOM, LayoutDOMView} from "models/layouts/layout_dom"
-
-	OPTIONS = 
-	  width:  '600px'
-	  height: '600px'
-	  style: 'dot-line'
-	  showPerspective: true
-	  showGrid: true
-	  keepAspectRatio: false
-	  verticalRatio: 1.0
-	  legendLabel: 'stuff'
-	  showlegend: true
-	  xLabel: 'Number of Participants'
-	  yLabel: 'Length Of Game'
-	  zLabel: 'Overall Rating'
-	  cameraPosition:
-		horizontal: -0.35
-		vertical: 0.22
-		distance: 1.8
-
-	export class Surface3dView extends LayoutDOMView
-	  initialize: (options) ->
-		super(options)
-
-		url = "https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.js"
-
-		script = document.createElement('script')
-		script.src = url
-		script.async = false
-		script.onreadystatechange = script.onload = () => @_init()
-		document.querySelector("head").appendChild(script)
-
-	  _init: () ->
-		@_graph = new vis.Graph3d(@el, @get_data(), OPTIONS)
-		@connect(@model.data_source.change, () =>
-			@_graph.setData(@get_data())
-		)
-
-	  get_data: () ->
-		data = new vis.DataSet()
-		source = @model.data_source
-		for i in [0...source.get_length()]
-		  data.add({
-			x:     source.get_column(@model.x)[i]
-			y:     source.get_column(@model.y)[i]
-			z:     source.get_column(@model.z)[i]
-			style: source.get_column(@model.color)[i]
-		  })
-		return data
-
-
-	export class Surface3d extends LayoutDOM
-	  default_view: Surface3dView
-	  type: "Surface3d"
-
-
-	  @define {
-		x:           [ p.String           ]
-		y:           [ p.String           ]
-		z:           [ p.String           ]
-		color:       [ p.String           ]
-		data_source: [ p.Instance         ]
-	  }
-	"""
-
-class Surface3d(LayoutDOM):
-	'''This is taken from the Surface 3d example on bokeh'''
-	__implementation__ = JS_CODE
-	data_source = Instance(ColumnDataSource)
-	x = String
-	y = String
-	z = String
-	color = String
-
+import time
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name="Senators").exists(), login_url='/accounts/login')
@@ -140,8 +64,10 @@ def survey_results(request, communityid):
 	:template:'data_analysis/survey_specific_result.html'
 
 	"""
+	start = time.time()
 
 	community = get_object_or_404(CommunityInst, pk=communityid)	
+	game_rating_by_grade_level = dict()
 	game_rating_dict = dict()
 	game_rating_list = []
 	index = 0 
@@ -149,8 +75,25 @@ def survey_results(request, communityid):
 		for instances in CommunityGameRatings.objects.filter(games=games):
 			game_rating_list.append(instances)
 			game_rating_dict[index] = instances 
+			try:
+				game_rating_by_grade_level[instances.games.game.name].append(
+						(
+						Student.objects.filter(user=instances.user)[0].grade_level, 
+						instances.game_rating
+						)
+					)
+			except KeyError:
+				game_rating_by_grade_level[instances.games.game.name] = [
+					(
+					Student.objects.filter(user=instances.user)[0].grade_level, 
+					instances.game_rating
+					)
+				]
 			index += 1 
-	game_mean = round(sum([r.game_rating for r in list(game_rating_dict.values())])/ ( len(game_rating_dict) ), 2)  	
+
+	game_mean = round(sum(r.game_rating for r in list(game_rating_dict.values()))/ ( len(game_rating_dict) ), 2)  	
+	
+
 	extras_list = [r
 	 for r in CommunityExtraRatings.objects.filter(community=community)]
 	
@@ -158,7 +101,7 @@ def survey_results(request, communityid):
 	 for p in CommunityExtraRatings.objects.filter(community=community)]	
 
 	overall_values = [r.overall_rating for r in extras_list]
-	overall_mean = sum(overall_values)/len(overall_values)
+	overall_mean = round(sum(overall_values)/len(overall_values), 2)
 
 
 	# PRIMITIVE ENCODER, TO BE REPLACED WITH SKLEARN AFTER MINICONDA EXPIERMENTATION
@@ -172,9 +115,15 @@ def survey_results(request, communityid):
 
 	hs = round(host_score(overall_values, pacing_rating_numeric), 2)
 
+	plot_list = []
+	for games, rating_lists in game_rating_by_grade_level.items():
+		plot_list.append(bar_graph(games, rating_lists))
+
+
 	return render(request, 'data_analysis/survey_specific_result.html', 
 		{'community': community, 'game_mean': game_mean, 'game_ratings_dict': game_rating_dict, 
-		'host_score': hs, 'extras_ratings': extras_list, 'overall_mean': overall_mean})
+		'host_score': hs, 'extras_ratings': extras_list, 'overall_mean': overall_mean, 
+		'test': game_rating_by_grade_level, 'plot_list': plot_list})
 
 
 @login_required
@@ -205,9 +154,7 @@ def overall_survey_results(request):
 	for games in CommunityGameRatings.objects.all():
 		y.append(games.games.game.estimated_length)
 	value = z 
-	source = ColumnDataSource(data=dict(x=x, y=y, z=value, color=value))
-	surface = Surface3d(x='x', y='y', z='z', color='color', data_source=source)
-	script, div = components(surface)
+	script, div = build_surface(x, y, z)
 
 	return render(request, 'data_analysis/survey_overall_results.html', {'div': div, 'script': script})
 

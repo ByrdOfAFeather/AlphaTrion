@@ -10,6 +10,7 @@ html, body {
 }
 
 #Minute{
+	padding-bottom: 50px;
 	margin: 0;
 	float: left;
 	height: 50%;
@@ -27,7 +28,6 @@ html, body {
 		display: block;
 	}
 	#Minute{
-		padding-bottom: 50px;
 		height: 75%;
 		width: 100%;
 	}

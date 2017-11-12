@@ -14,6 +14,7 @@ $(function(){
 {% endblock %}
 
 {% block style %}
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.9.min.css" type="text/css" />
 
@@ -50,6 +51,13 @@ tr:nth-child(even){
 	padding-top: 40px;
 }
 
+#grade-by-rating-chart{
+	width: auto;  
+	max-width: 40%;
+	display: inline-block;
+}
+
+
 @media only screen and (orientation: portrait) {
 	#main{
 		display: none;
@@ -72,6 +80,7 @@ tr:nth-child(even){
 </div>
 
 <div id='main'>
+
 <h4 id='overallmean'> Average Game Rating: {{ game_mean }}</h4>
 <h4 id='overallmean'> Average Overall Rating: {{ overall_mean }}</h4>
 
@@ -93,7 +102,7 @@ tr:nth-child(even){
 		</tr>
 	{% endfor %}
 	</table>
-	<h5>====== Community RATINGS ======</h5>
+	<h5>====== COMMUNITY RATINGS ======</h5>
 	<table id='indivratet'>
 		<tr>
 			<th class='text'>Overall Rating</th>
@@ -122,8 +131,11 @@ tr:nth-child(even){
 
 </div>
 
-<div id='rating-grade-level'>
-	<!-- coming soon --> 
+<div id='grade-by-rating-chart'>
+	{% for plots in plot_list %}
+	{{ plots.0|safe }}
+	{{ plots.1|safe }}
+	{% endfor %}
 </div>
 
 <div id='overall-ratings'>

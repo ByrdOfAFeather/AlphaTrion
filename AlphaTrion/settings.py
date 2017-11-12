@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Project.apps.ProjectConfig',
     'Senate.apps.SenateConfig',
     'Announcements.apps.AnnouncementsConfig',
+    'UserProfile.apps.UserprofileConfig',
     's3direct',
 ]
 
@@ -128,7 +129,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
