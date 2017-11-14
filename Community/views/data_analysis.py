@@ -58,14 +58,15 @@ def survey_results(request, communityid):
 
 	''overall_mean''
 		The mean for the overall rating of a community. 
+
+	''plot_list''
+		A list of tuples containing scripts and divs for graphs
 	
 
 	**Template:**
 	:template:'data_analysis/survey_specific_result.html'
 
 	"""
-	start = time.time()
-
 	community = get_object_or_404(CommunityInst, pk=communityid)	
 	game_rating_by_grade_level = dict()
 	game_rating_dict = dict()
@@ -91,7 +92,7 @@ def survey_results(request, communityid):
 				]
 			index += 1 
 
-	game_mean = round(sum(r.game_rating for r in list(game_rating_dict.values()))/ ( len(game_rating_dict) ), 2)  	
+	game_mean = round(sum(r.game_rating for r in list(game_rating_dict.values())) / ( len(game_rating_dict) ), 2)  	
 	
 
 	extras_list = [r
@@ -123,7 +124,7 @@ def survey_results(request, communityid):
 	return render(request, 'data_analysis/survey_specific_result.html', 
 		{'community': community, 'game_mean': game_mean, 'game_ratings_dict': game_rating_dict, 
 		'host_score': hs, 'extras_ratings': extras_list, 'overall_mean': overall_mean, 
-		'test': game_rating_by_grade_level, 'plot_list': plot_list})
+		'plot_list': plot_list})
 
 
 @login_required

@@ -112,7 +112,7 @@ def bar_graph(game_name, game_ratings):
 		elif ratings[0] == 9:
 			grade_9.append(ratings[1])
 	averages_list = [average(grade_9), average(grade_10), average(grade_11), average(grade_12)]
-	grade_rating = figure(title=game_name, toolbar_location=None, plot_width=300, plot_height=300)
+	grade_rating = figure(tools='save', title=game_name, plot_width=300, plot_height=300)
 	grade_rating.hbar(y=(9, 10, 11, 12), right=averages_list, height=.5)
 	grade_rating.yaxis.axis_label = 'Grade'
 	grade_rating.xaxis.axis_label = 'Average Rating'

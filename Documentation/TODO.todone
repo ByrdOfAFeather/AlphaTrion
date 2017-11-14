@@ -3,7 +3,6 @@ PROGRAMMING - Overall:
 -4 When models with s3Direct fields are deleted, delete the photo linked with them 
 -4 Figure out method of clearing out old communites (mass delete or something else)
 -4 Figure out a way of automatically updating grades. 
--4 Add grade levels to database.
 -4 Community overall suggestions page 
 -4 Finish non-manual addition of community (10-27) <-- RIP 
 -4 Custom Survey for Community (10-27) <-- RIP

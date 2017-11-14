@@ -99,7 +99,7 @@ html, body{
 }
 
 #Community-Sub-List {
-	width: 426px;
+	width: 427px;
 	display: none;
 	margin: 0;
 	font-size: .7em;
@@ -121,10 +121,13 @@ html, body{
 	border-right: none;
 }
 
+#Community-Sub-List a{
+	border-right: none;
+}
+
 #Senator-Main-List:hover ul{ 
 	display: block;
 }
-
 
 @media only screen and (max-width : 1083px){
 	
@@ -185,6 +188,13 @@ html, body{
 	}
 
 	#Senator-Sub-List{
+		width: auto;
+		list-style-type: none;
+		position: static;
+		background-color: black;
+	}
+
+	#Community-Sub-List{
 		width: auto;
 		list-style-type: none;
 		position: static;
