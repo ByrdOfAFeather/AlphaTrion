@@ -53,7 +53,7 @@ $(function(){
 	<label>What did you think of {{ games }} 
 		
 	{% load static %}
-	<img class='description-image' id='{{games.name}}'style="height:1em;width:1em;" src="{% static "Minor/icons.png" %}" alt="info">
+	<sup><img class='description-image' id='{{games.name}}'style="height:1em;width:1em;" src="{% static "Minor/icons.png" %}" alt="info"><sup>
 	<p style='displaY:none' id='game-{{games.name}}-description'>{{ games.description }}</p>
 
 

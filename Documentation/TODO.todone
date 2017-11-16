@@ -1,21 +1,17 @@
 ============= OVERALL ===============
 PROGRAMMING - Overall: 
--4 When models with s3Direct fields are deleted, delete the photo linked with them 
+-4 When models with s3Direct fields are deleted, delete the photo linked with them
+-4 Compress uploaded photos automatically  
 -4 Figure out method of clearing out old communites (mass delete or something else)
 -4 Figure out a way of automatically updating grades. 
 -4 Community overall suggestions page 
 -4 Finish non-manual addition of community (10-27) <-- RIP 
 -4 Custom Survey for Community (10-27) <-- RIP
 -3 Add Website Survey (Meta)
--3 Make buttons such as delete and add look actaully nice and be noticable
--3 Song Suggestions for Community 
--2 Security Checkups  
 -2 Clean up Import statments
--2 Non-Manual Senate Projects
 -1 Update documentation
 
 STYLING - Overall: 
--4 PLEASE CLEAN UP base.html 
 -4 Note Student-Body Specific Complaints (About Website)
 -2 Tidy up login section 
 
@@ -23,6 +19,7 @@ STYLING - Overall:
 ============= INDIVIDUAL PAGES ============
 COMMUNITY:
 -4 Split Community Survey view function into smaller pieces
+-3 Song Suggestions for Community 
 -2 Add a option to do ranges of dates in overall results 
 
 Project:
@@ -34,4 +31,5 @@ Announcements:
 Senate:
 Home: 
 Minutes:
+-3 Make buttons such as delete and add look actaully nice and be noticable
 

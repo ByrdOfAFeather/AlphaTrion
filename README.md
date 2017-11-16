@@ -2,13 +2,13 @@
 
 The Senate Website - AlphaTrion - is meant to be a template for a student-led website for student governments. It is meant to preform data analytics on a school-wide scale. The website is to serve more than a single senate with an end goal of iteratively improving senate functions as time passes. The website is built to be modular without programming experience; senate members should be able to collect new data without having previous programming knowledge. With that in mind, the website is also to serve the purpose of data analytics, seamlessly visualizing data through the use of external libraries.
 
-<h1 align='center'>Installation</h1>
+<h1 align='center'>Setup</h1>
 
 ###### Prerequisites
 ---
 ```
-Python - 3.5.x (or newer)
-Git - 2.13 (or newer)
+Python - 3.6.x (or newer): python.org
+Git - 2.13 (or newer): git-scm.com
 ```
 
 ###### Clone Repository
@@ -166,6 +166,16 @@ python manage.py runserver
 ```
 
 It will start the server and give you a link with a few numbers. Copy this into your browser and verify everything is working properly. 
+
+<h1 align='center'>Survey Anonymity</h1>
+
+<p>For the purposes of this website, all surveys are anonymous to everyone, save for the superuser account. An example of what a data analysis page would look like is shown below: 
+
+![Data Analysis Sample Page](Documentation/samplepage.png)
+
+The page only contains data relevant to the task at hand. Otherwise, identification information is completely out of view.</p>
+
+
 
 <h1 align='center'>Built With</h1>
 
