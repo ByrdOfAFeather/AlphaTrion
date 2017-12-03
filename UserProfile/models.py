@@ -8,6 +8,7 @@ GRADE_LEVELS = [
 	(12, 12)
 ]
 
+
 class Student(models.Model):
 	user = models.OneToOneField(User, null=True)
 	grade_level = models.PositiveIntegerField(choices=GRADE_LEVELS, default=3)

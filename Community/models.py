@@ -1,20 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User 
-from django.utils.translation import ugettext_lazy as _ 
 from django.utils import timezone
 from s3direct.fields import S3DirectField
-import uuid
+
 
 def get_first_name(self):
 	return self.first_name
 
+
 User.add_to_class("__str__", get_first_name)
-
-
 RATING_CHOICES = (
 	(1, '1'),
 	(2, '2'),
-	(3, '3'), 
+	(3, 'e'),
 	(4, '4'),
 	(5, '5'),
 	(6, '6'),
@@ -37,6 +35,7 @@ class Game(models.Model):
 	def __str__(self):
 		return "{}".format(self.name)
 
+
 # Community
 class CommunityInst(models.Model):
 	"""
@@ -52,7 +51,7 @@ class CommunityInst(models.Model):
 
 	def __str__(self):
 		return"{}".format(self.date)
-   
+
 	class Meta:
 		verbose_name = 'Community Instance'
 		verbose_name_plural = 'Community Instances'
@@ -73,7 +72,6 @@ class CommunityGames(models.Model):
 
 	def __str__(self):
 		return "{}".format(self.game)
-
 
 
 class CommunityGameRatings(models.Model):
@@ -104,6 +102,7 @@ class CommunityGameRatings(models.Model):
 	def __str__(self):
 		return "{}-{}".format(self.user.first_name, self.games)
 
+
 class CommunityExtraRatings(models.Model):
 	"""
 	Attaches a community's extras to a user rating,
@@ -133,29 +132,15 @@ class CommunityExtraRatings(models.Model):
 		return "{}-{}".format(self.user.first_name, self.community)
 
 
+class SongSuggestions(models.Model):
+	"""
+	Represents a single song suggestion for a single community
+	links to :model:'auth.User'
+	links to :model:'Community.CommunityInst'
+	"""
+	user = models.ForeignKey(User)
+	community = models.ForeignKey(CommunityInst)
+	suggestions = models.TextField(help_text='Please list links to songs, we can\'t play it with just a name')
 
-# Temporary Storage in case of bad things
-# class CommunityPacingRatings(models.Model):
-# 	"""
-# 	Attaches a community's extras to a user rating (to be merged into extras),
-# 	links to :model:'auth.User' 
-# 	links to :model:'Community.CommunityInst'
-# 	"""
-# 	user = models.ForeignKey(User)
-# 	community = models.ForeignKey(CommunityInst)
-# 	COMMUNITY_PACING_RATINGS = (
-# 			('v', 'Very Good'),
-# 			('g', 'Good'),
-# 			('d', 'Decent'),
-# 			('b', 'Bad'),
-# 			('h', 'Very Bad') # h for horrible
-# 		)
-
-# 	pacing_rating = models.CharField(max_length=20, choices=COMMUNITY_PACING_RATINGS, default='d')
-	
-# 	class Meta:
-# 		verbose_name='Community Pacing Ratings'
-# 		verbose_name_plural='Community Pacing Ratings'
-# 	def __str__(self):
-# 		return "{}-{}".format(self.user.first_name, self.community)
-
+	def __str__(self):
+		return "{}={}".format(self.user.first_name, self.community)

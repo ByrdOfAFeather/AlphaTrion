@@ -2,10 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User 
 from s3direct.fields import S3DirectField
 
+
 def get_first_name(self):
 	return self.first_name
 
+
 User.add_to_class("__str__", get_first_name)
+
 
 class Questions(models.Model):
 	"""
@@ -59,8 +62,9 @@ class SurveyQuestions(models.Model):
 	class Meta:
 		verbose_name = 'Survey Question'
 		verbose_name_plural = 'Survey Questions'
+
 	def __str__(self):
-		return ("{}-{}".format(self.survey.title, self.question.question))
+		return "{}-{}".format(self.survey.title, self.question.question)
 
 
 class SurveyAnswers(models.Model):
@@ -73,7 +77,7 @@ class SurveyAnswers(models.Model):
 	question = models.ForeignKey(Questions)
 
 	def __str__(self):
-		return ("{}-{}".format(self.survey.title, self.question.question))
+		return "{}-{}".format(self.survey.title, self.question.question)
 
 
 class AnswerInt(SurveyAnswers):
@@ -91,7 +95,7 @@ class AnswerInt(SurveyAnswers):
 		verbose_name_plural = 'Integer Answers'
 	
 	def __str__(self):
-		return ('{} {}-{}'.format(self.user.first_name, self.user.last_name, self.answer))
+		return '{} {}-{}'.format(self.user.first_name, self.user.last_name, self.answer)
 
 
 class AnswerText(SurveyAnswers):
@@ -109,7 +113,7 @@ class AnswerText(SurveyAnswers):
 		verbose_name_plural = 'Text Answers'
 
 	def __str__(self):
-		return ('{} {}-{}'.format(self.user.first_name, self.user.last_name, self.answer))
+		return '{} {}-{}'.format(self.user.first_name, self.user.last_name, self.answer)
 
 
 class SenateProjects(models.Model):
@@ -151,4 +155,4 @@ class StudentProjects(models.Model):
 		verbose_name_plural = 'Student Projects'
 
 	def __str__(self):
-		return self.title 
+		return self.title

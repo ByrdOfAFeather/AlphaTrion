@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 
+
 def senate_home(request):
 	"""
 	The home view for the senate page
@@ -21,8 +22,10 @@ def senate_home(request):
 	senator_list = Senator.objects.all()
 	return render(request, 'senate-home.html', {'senator_list': senator_list})
 
+
 def senate_constitution(request):
 	return render(request, 'senate-constitution.html')
+
 
 def minutes(request):
 	minutes_list = Minutes.objects.all()
@@ -59,7 +62,7 @@ def add_minutes(request):
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name="Senators").exists(), login_url='/accounts/login')
-def delete_minutes(request, minuteid):
+def delete_minutes(_, minuteid):
 	"""
 	View to delete minutes from the minute database
 	

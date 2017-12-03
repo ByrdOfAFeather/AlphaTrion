@@ -14,7 +14,6 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.core.mail import send_mail
 
-import time
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name="Senators").exists(), login_url='/accounts/login')
@@ -79,31 +78,31 @@ def survey_results(request, communityid):
 			try:
 				game_rating_by_grade_level[instances.games.game.name].append(
 						(
-						Student.objects.filter(user=instances.user)[0].grade_level, 
-						instances.game_rating
+							Student.objects.filter(user=instances.user)[0].grade_level,
+							instances.game_rating
 						)
 					)
 			except KeyError:
 				game_rating_by_grade_level[instances.games.game.name] = [
 					(
-					Student.objects.filter(user=instances.user)[0].grade_level, 
-					instances.game_rating
+						Student.objects.filter(user=instances.user)[0].grade_level,
+						instances.game_rating
 					)
 				]
 			index += 1 
 
 	game_mean = round(sum(r.game_rating for r in list(game_rating_dict.values())) / ( len(game_rating_dict) ), 2)  	
-	
 
 	extras_list = [r
-	 for r in CommunityExtraRatings.objects.filter(community=community)]
+	               for r in CommunityExtraRatings.objects.filter(community=community)
+	               ]
 	
-	pacing_rating_text = [p.pacing_rating 
-	 for p in CommunityExtraRatings.objects.filter(community=community)]	
+	pacing_rating_text = [p.pacing_rating
+	                      for p in CommunityExtraRatings.objects.filter(community=community)
+	                      ]
 
 	overall_values = [r.overall_rating for r in extras_list]
 	overall_mean = round(sum(overall_values)/len(overall_values), 2)
-
 
 	# PRIMITIVE ENCODER, TO BE REPLACED WITH SKLEARN AFTER MINICONDA EXPIERMENTATION
 	pacing_rating_numeric = []
@@ -120,11 +119,10 @@ def survey_results(request, communityid):
 	for games, rating_lists in game_rating_by_grade_level.items():
 		plot_list.append(bar_graph(games, rating_lists))
 
-
-	return render(request, 'data_analysis/survey_specific_result.html', 
-		{'community': community, 'game_mean': game_mean, 'game_ratings_dict': game_rating_dict, 
-		'host_score': hs, 'extras_ratings': extras_list, 'overall_mean': overall_mean, 
-		'plot_list': plot_list})
+	return render(request, 'data_analysis/survey_specific_result.html',
+	              {'community': community, 'game_mean': game_mean, 'game_ratings_dict': game_rating_dict,
+	               'host_score': hs, 'extras_ratings': extras_list, 'overall_mean': overall_mean,
+	               'plot_list': plot_list})
 
 
 @login_required
@@ -158,6 +156,7 @@ def overall_survey_results(request):
 	script, div = build_surface(x, y, z)
 
 	return render(request, 'data_analysis/survey_overall_results.html', {'div': div, 'script': script})
+
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name="Senators").exists(), login_url='/accounts/login')

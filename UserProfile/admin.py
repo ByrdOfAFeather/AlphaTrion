@@ -9,8 +9,10 @@ class StudentInLine(admin.StackedInline):
     model = Student
     can_delete = False
 
+
 class UserAdmin(BaseUserAdmin):
     inlines = (StudentInLine, )
+
 
 # Re-register UserAdmin
 admin.site.unregister(User)

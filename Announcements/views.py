@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import permission_required, login_required, user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -18,8 +18,8 @@ def announcements(request):
 	**Template:**
 	:template:'announcements-home.html'
 	"""
-	announcements = Announcement.objects.all()
-	return render(request, 'announcements-home.html', {'announcements': announcements})
+	announcements_list = Announcement.objects.all()
+	return render(request, 'announcements-home.html', {'announcements': announcements_list})
 
 
 @login_required
@@ -47,9 +47,10 @@ def add_announcement(request):
 
 	return render(request, 'add_announcement.html', {'form': form})
 
+
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name="Senators").exists(), login_url='/accounts/login')
-def delete_announcement(request, announcementid):
+def delete_announcement(announcementid):
 	"""Function call to delete an announcement
 
 	:param announcementid: the id to delete an announcement

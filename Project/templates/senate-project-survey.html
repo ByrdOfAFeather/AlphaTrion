@@ -1,6 +1,6 @@
 {% extends 'base-nonav.html' %}
 {% block content %}
-
+{% if request.user.is_authenticated %}
 <form method="POST">
 {% csrf_token %}
 <table>
@@ -11,5 +11,7 @@
 
 <input type='submit' value="Submit">
 </form>
-
+{% else %}
+<a href="{% url 'login' %}?next={{request.path}}">Login</a>
+{% endif %}
 {% endblock %}

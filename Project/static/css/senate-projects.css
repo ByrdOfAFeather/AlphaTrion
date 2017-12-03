@@ -47,3 +47,10 @@ html, body{
 	color: white;
 	text-decoration: none;
 }
+@media only screen and (max-width : 1083px){
+	.articles{
+		height: 75%;
+		width: 100%;
+	}
+}
+

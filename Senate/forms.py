@@ -1,6 +1,7 @@
 from .models import Minutes
 from django import forms
 
+
 class MinutesForm(forms.ModelForm):
     class Meta:
         model = Minutes
@@ -8,4 +9,3 @@ class MinutesForm(forms.ModelForm):
         widgets = {
 			'date': forms.DateInput(attrs={'class': 'datepicker'}),
 		}
-    

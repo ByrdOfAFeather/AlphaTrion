@@ -1,4 +1,4 @@
-{% extends 'base-nonav.html' %}
+{% extends 'base.html' %}
 {% block title %}<title>{{ project.title }}</title>{% endblock %}
 
 {% block style %}
@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block content %}
+{% if request.user.is_authenticated %}
 <div class='photo'>
 	<img class='picture' src='{{ project.image }}'>
 </div>
@@ -15,11 +16,14 @@
 </div>
 
 <div class='description'>
-<h2>{{ project.description }}</h2>
+<p>{{ project.description }}</p>
 </div>
 
 {% if project.survey %}
 	<h3><p class='survey-link'><a class='survey-link' href='{% url 'senate-project-survey' project.id %}'>Survey</a></p></h3>
 {% else %}
+{% endif %}
+{% else %}
+<a href="{% url 'login' %}?next={{request.path}}">Login</a>
 {% endif %}
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
 from s3direct.fields import S3DirectField
+
 
 class Senator(models.Model):
 	"""
@@ -25,20 +25,21 @@ class Senator(models.Model):
 	email = models.EmailField(max_length=254)
 	position = models.CharField(max_length=14, choices=POSITION, default='Senator')
 	photo = S3DirectField(dest='images')
+
 	def __str__(self):
 		return self.name
 		
 	class Meta:
 		ordering = ["-grade", "name"]
 
+
 class Minutes(models.Model):
 	"""
 	Model to store a minute
 	"""
 	date = models.DateField()
-	embed_link = models.TextField(default=r'Embed Code Goes Here!', 
-		help_text='To get a embed link goto file -> publish to web -> embed -> copy the link into here')
-	
+	embed_link = models.TextField(default=r'Embed Code Goes Here!',
+	                              help_text='To get a embed link goto file -> publish to web -> embed -> copy the link into here')
 
 	def __str__(self):
 		return "".format(self.date)
@@ -47,6 +48,3 @@ class Minutes(models.Model):
 		verbose_name = 'Minute'
 		verbose_name_plural = 'Minutes'
 		ordering = ["-date"]
-
-
-	

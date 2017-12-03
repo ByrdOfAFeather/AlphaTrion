@@ -37,7 +37,6 @@ class CustomSurveyForm(forms.ModelForm):
 			if data:
 				self.fields['question_{}'.format(questions.pk)].initial = data.get(questions.question)
 
-	
 	def save(self, commit=True):
 		for questions, answer in self.cleaned_data.items():
 			if questions.startswith('question_'):

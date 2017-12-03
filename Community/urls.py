@@ -1,5 +1,4 @@
-from django.conf.urls import url, include
-from django.contrib import admin
+from django.conf.urls import url
 from . import views 
 
 urlpatterns = [
@@ -10,5 +9,6 @@ urlpatterns = [
 	url(r'^communitysurveyoverallresults/$', views.overall_survey_results, name='overall-community-results'),
 	url(r'^addcommunity/$', views.add_community, name='add-community'),
 	url(r'^addgame/$', views.add_game, name='add-game'),
-	url(r'^equationdocumentation/$', views.equation_documentation, name='equation-documentation')
+	url(r'^equationdocumentation/$', views.equation_documentation, name='equation-documentation'),
+	url(r'^communitysongsuggestion/$', views.song_suggestion, name='song-suggestion'),
 ]

@@ -1,29 +1,22 @@
-from __future__ import division	
-import numpy as np
 from django.shortcuts import render
-from django.views import generic 	
+from django.views import generic
 from django.urls import reverse
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.decorators import permission_required, login_required, user_passes_test
-from django.contrib.auth.models import Group
-from bokeh.plotting import figure, output_file, show
-from bokeh.embed import components
-from bokeh.core.properties import Instance, String 
-from bokeh.models import ColumnDataSource, LayoutDOM
-from bokeh.io import show
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms import formset_factory
 from django.utils.html import escape
 from Community.models import *
 from Community.forms import *
 
-class CommunityInstView(generic.ListView): 
+
+class CommunityInstView(generic.ListView):
 	model = CommunityInst
 	template_name = 'surveys/survey_list.html'
 
-# Specfic Survey for a community
+
+# Specific Survey for a community
 def review_community_instance(request, communityid):
 	"""
 	Gets a review for a community 
@@ -43,7 +36,6 @@ def review_community_instance(request, communityid):
 
 	''extra_ratings''
 		Form linking this user & community to a extra rating
-	
 
 	**Template:**
 	:template:'surveys/survey_community.html'
@@ -55,52 +47,50 @@ def review_community_instance(request, communityid):
 	if not user:
 		return render(request, 'not_logged_in.html')
 
-
 	community = get_object_or_404(CommunityInst, pk=communityid)
-	
+
 	if request.method == "POST":
 		game_form_dict = dict()
 		for games in community.occuring_games.all():
 			game_form_dict[games.name] = CommunityGameRatingsForm(request.POST, prefix='{}'.format(games.name))
 
 		extra_section = CommunityExtraRatingsForm(request.POST)
-		true_condintions = 0 
+		true_condintions = 0
 		for y in game_form_dict.values():
 			if y.is_valid():
 				true_condintions += 1
-			else: 
+			else:
 				pass
 
 		if true_condintions == len(game_form_dict.values()):
 
 			for games in community.occuring_games.all():
-				if CommunityGameRatings.objects.filter(user=user, games=CommunityGames.objects.filter(communityinst=community, game=games)[0]): # Checks if the user has submitted a survey for the game
+				if CommunityGameRatings.objects.filter(user=user, games=CommunityGames.objects.filter(
+						communityinst=community, game=games)[0]):  # Checks if the user has submitted a survey for the game
 					raise ValidationError("You've already submitted this survey!")
-				else: 
+				else:
 					game_rating = game_form_dict[games.name].cleaned_data['game_rating']
 					game_comments = game_form_dict[games.name].cleaned_data['game_comments']
 					CommunityGameRatings.objects.create(
-						user=user, 
-						games=CommunityGames.objects.filter(communityinst=community, game=games)[0], 
-						game_rating=game_rating, 
+						user=user,
+						games=CommunityGames.objects.filter(communityinst=community, game=games)[0],
+						game_rating=game_rating,
 						game_comments=game_comments
 					)
-					
+
 			if extra_section.is_valid():
 				overall_rating = extra_section.cleaned_data['overall_rating']
 				extra_comments = extra_section.cleaned_data['extra_comments']
 				how_can_we_improve_survey = extra_section.cleaned_data['how_can_we_improve_survey']
 				pacing_rating = extra_section.cleaned_data['pacing_rating']
 				CommunityExtraRatings.objects.create(
-					user=user, 
-					community=community, 
-					overall_rating=overall_rating, 
-					extra_comments=extra_comments, 
+					user=user,
+					community=community,
+					overall_rating=overall_rating,
+					extra_comments=extra_comments,
 					how_can_we_improve_survey=how_can_we_improve_survey,
 					pacing_rating=pacing_rating,
-				)	
-
-
+				)
 
 			return HttpResponseRedirect(reverse('community-home', current_app='Community'))
 
@@ -110,8 +100,34 @@ def review_community_instance(request, communityid):
 			game_form_dict[games.name] = CommunityGameRatingsForm(prefix='{}'.format(games.name))
 		extra_section = CommunityExtraRatingsForm()
 
-	return render(request, 'surveys/survey_community.html', {'community': community, 
-		'game_form_dict': game_form_dict, 'user': user, 'extra_ratings': extra_section})
+	return render(request, 'surveys/survey_community.html', dict(community=community, game_form_dict=game_form_dict,
+	                                                             user=user, extra_ratings=extra_section))
+
+
+def song_suggestion(request):
+	user = None
+	if request.user.is_authenticated():
+		user = request.user
+
+	if not user:
+		return render(request, 'not_logged_in.html')
+
+	if request.method == "POST":
+		form = CommunitySongSuggestionForm(request.POST)
+
+		if form.is_valid():
+			try:
+				length = len(form.cleaned_data['suggestions'].split('.')) > 3
+				if "youtube" in [x.lower() for x in form.cleaned_data['suggestions'].split('.')] and length:
+					print("test")
+			except IndexError:
+				raise ValidationError("This is a test")
+
+	else:
+		form = CommunitySongSuggestionForm()
+
+	return render(request, 'surveys/song_suggestion.html', dict(form=form))
+
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name="Senators").exists(), login_url='accounts/login')
@@ -129,16 +145,16 @@ def add_community(request):
 	**Template:**
 	:template:'surveys/add_community.html'
 	"""
-	CommunityGamesFormset = formset_factory(CommunityGamesCreationForm, extra=1)
+	community_games_formset = formset_factory(CommunityGamesCreationForm, extra=1)
 	if request.method == 'POST':
 		community_creation_form = CommunityInstanceCreationForm(request.POST)
-		community_games = CommunityGamesFormset(request.POST, request.FILES)
+		community_games = community_games_formset(request.POST, request.FILES)
 		if community_games.is_valid():
 			for tests in community_games.forms:
 				print(tests)
 
 	else:
-		community_games = CommunityGamesFormset()
+		community_games = community_games_formset()
 		community_creation_form = CommunityInstanceCreationForm()
 
 	return render(request, 'surveys/add_community.html', {'com': community_creation_form, 'comgame': community_games})
@@ -157,13 +173,11 @@ def add_handler(request, form, field):
 	
 	**Template:**
 	:template:'surveys/popup-form.html'
-
 	"""
-
 	if request.method == "POST":
 		form = form(request.POST)
 		if form.is_valid():
-			
+
 			try:
 				add_object = form.save()
 
@@ -177,7 +191,7 @@ def add_handler(request, form, field):
 	return render(request, 'surveys/popup-form.html', {'form': form, 'field': field})
 
 
-@login_required 
+@login_required
 @user_passes_test(lambda u: u.groups.filter(name='Senators').exists(), login_url='accounts/login')
 def add_game(request):
 	"""
